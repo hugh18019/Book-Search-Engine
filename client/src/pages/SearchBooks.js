@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useMutation } from '@apollo/client';
 import {
   Jumbotron,
   Container,
@@ -77,13 +78,13 @@ const SearchBooks = () => {
     const [saveBookMutation, { error }] = useMutation(SAVE_BOOK);
 
     try {
-      const response = await saveBookMutation({
+      const { data } = await saveBookMutation({
         variables: { bookToSave },
       });
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      // if (!response.ok) {
+      //   throw new Error('something went wrong!');
+      // }
 
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);

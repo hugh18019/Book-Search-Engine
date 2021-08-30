@@ -6,13 +6,15 @@ import {
   Card,
   Button,
 } from 'react-bootstrap';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { getMe, deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 // Import the GET_ME query
 import { GET_ME } from '../utils/queries';
+// Import the REMOVE_BOOK mutation
+import { REMOVE_BOOK } from '../utils/mutations';
 
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
@@ -55,15 +57,28 @@ const SavedBooks = () => {
       return false;
     }
 
+    const [removeBookMutation, { error }] = useMutation(REMOVE_BOOK);
+
     try {
-      const response = await deleteBook(bookId, token);
+      // const response = await deleteBook(bookId, token);
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      const { updatedUser } = await removeBookMutation({
+        variables: { bookId: bookId },
+      });
 
-      const updatedUser = await response.json();
-      setUserData(updatedUser);
+      // if (!response.ok) {
+      //   throw new Error('something went wrong!');
+      // }
+
+      // const updatedUser = await response.json();
+
+      // Filter out the user who just had one of their book deleted
+      const oldUsers = [
+        ...userData.filter((user) => user._id !== updatedUser._id),
+      ];
+
+      // Add the user who just had one of their book deleted back into the state
+      setUserData([...oldUsers, updatedUser]);
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
