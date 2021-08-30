@@ -17,7 +17,8 @@ import { GET_ME } from '../utils/queries';
 import { REMOVE_BOOK } from '../utils/mutations';
 
 const SavedBooks = () => {
-  const [userData, setUserData] = useState({});
+  const [UserData, setUserData] = useState({});
+  const [removeBookMutation, { error }] = useMutation(REMOVE_BOOK);
 
   // use this to determine if `useEffect()` hook needs to run again
   const userDataLength = Object.keys(userData).length;
@@ -56,8 +57,6 @@ const SavedBooks = () => {
     if (!token) {
       return false;
     }
-
-    const [removeBookMutation, { error }] = useMutation(REMOVE_BOOK);
 
     try {
       // const response = await deleteBook(bookId, token);
