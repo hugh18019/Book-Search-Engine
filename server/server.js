@@ -14,8 +14,10 @@ const PORT = process.env.PORT || 3001;
 
 // Create a new Apollo server
 
+let server;
+
 async function startServer() {
-  const server = new ApolloServer({
+  server = new ApolloServer({
     typeDefs,
     resolvers,
   });
@@ -40,4 +42,5 @@ app.use(routes);
 
 db.once('open', () => {
   app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
+  console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
 });
