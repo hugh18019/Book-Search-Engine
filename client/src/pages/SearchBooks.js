@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import {
   Jumbotron,
   Container,
@@ -15,6 +15,7 @@ import { saveBook, searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
 import { SAVE_BOOK } from '../utils/mutations';
+import { GET_ME } from '../utils/queries';
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -80,6 +81,8 @@ const SearchBooks = () => {
     if (!token) {
       return false;
     }
+
+    console.log('Got past auth');
 
     try {
       const { data } = await saveBookMutation({
