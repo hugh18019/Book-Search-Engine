@@ -15,18 +15,22 @@ const PORT = process.env.PORT || 3001;
 
 // Create a new Apollo server
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: authMiddleware,
-});
+let server;
 
-// await server.start();
+async function startServer() {
+  server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: authMiddleware,
+  });
 
-// Apply the Apollow server to the Express server as middleware
-server.applyMiddleware({ app });
+  await server.start();
 
-// startServer();
+  // Apply the Apollow server to the Express server as middleware
+  server.applyMiddleware({ app });
+}
+
+startServer();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
